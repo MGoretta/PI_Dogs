@@ -1,12 +1,14 @@
+// Importar express y el controlador adecuado para cada ruta
 const { Router } = require('express');
-// Importar todos los routers;
-// Ejemplo: const authRouter = require('./auth.js');
 
+const usersRoutes = require ("./usersRoutes.js");
+
+const postRoute = require ("./postRoutes.js");
 
 const router = Router();
 
-// Configurar los routers
-// Ejemplo: router.use('/auth', authRouter);
+router.use ("/users", usersRoutes);
 
+router.use ("/post", postRoute);
 
 module.exports = router;
