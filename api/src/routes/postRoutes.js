@@ -1,10 +1,9 @@
 const { Router } = require('express');
-
-const createDog = require("../handlers/postHandler");
+const createDogHandler = require("../handlers/postHandler");
 
 const postRoutes = Router();
 
-postRoutes.post("/", createDog);
+postRoutes.post("/", createDogHandler);
 
 module.exports = postRoutes;
 
