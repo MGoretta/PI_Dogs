@@ -3,11 +3,14 @@ const getAllDogs = (req, res) => {
 }
 
 const getDogById = (req, res) => {
-    res.status(200).send("Detalle del dog");
+    const {idRaza} = req.params;
+
+    res.status(200).send(`Detalle del dog ${idRaza}`);
 }
 
 const getDogsByName = (req, res) => {
-    res.status(200).send("Detalle del dog por name");
+    const {name} = req.query;
+    if (name) res.status(200).send(`Aquí está el usuario ${id}`);
 }
  
 const getAllTemperaments = (req, res) => {
