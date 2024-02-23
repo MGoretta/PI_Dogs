@@ -1,4 +1,4 @@
-const { createDog } = require("../controllers/createDog");
+const createDog = require("../controllers/createDog");
 
 const createDogHandler = async (req, res) => {
     const { image, name, height, weight, life_span } = req.body;
