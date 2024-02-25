@@ -1,44 +1,32 @@
-const axios = require('axios');
+//require ('dotenv').config();
 const { Dog, Temperament } = require('../db');
 
-const createDog = async (dogName) => {
-    try {
-        // Obtener datos del perro de la API externa por su nombre
-        const response = await axios.get(`https://api.thedogapi.com/v1/breeds/search?q=${dogName}`);
-        const dogData = response.data[0]; // Tomamos el primer resultado en caso de que haya varios perros con el mismo nombre
-
-        if (!dogData) {
-            throw new Error(`No se encontró ningún perro con el nombre '${dogName}'.`);
-        }
-
-        // Extraer los temperamentos del objeto de datos del perro
-        const temperamentArray = dogData.temperament.split(',').map(temp => temp.trim());
-
-        // Crear el perro con los datos proporcionados y los temperamentos de la API
-        const createdDog = await Dog.create({ 
-            image: dogData.image.url, // Supongamos que la URL de la imagen está en el campo 'url'
-            name: dogData.name, 
-            height: dogData.height.metric, // Supongamos que la altura está en el campo 'metric'
-            weight: dogData.weight.metric, // Supongamos que el peso está en el campo 'metric'
-            life_span: dogData.life_span 
+const createDog = async (image, name, height_min, height_max, weight_min, weight_max, life_span_min, life_span_max,temperaments) => {
+  //  try {
+        // Crear el perro en la base de datos
+        const newDog = await Dog.create({
+            image,
+            name,
+            height_min,
+            height_max,
+            weight_min,
+            weight_max,
+            life_span_min,
+            life_span_max,
+            temperaments
         });
 
-        // Buscar o crear los temperamentos asociados
-        const temperamentModels = await Promise.all(temperamentArray.map(tempName => {
-            return Temperament.findOrCreate({
-                where: { name: tempName }
-            });
-        }));
+        let DogTemperaments = await Temperament.findAll({
+            where: {
+                name: temperaments
+            }
+        })
 
-        // Relacionar los temperamentos con el perro
-        await createdDog.setTemperaments(temperamentModels.map(([tempModel]) => tempModel));
+        await newDog.addTemperaments(DogTemperaments)
 
-        return createdDog;
-    } catch (error) {
-        console.error("Error al crear el perro:", error);
-        throw error;
+        return newDog;
+ //   } catch (error) {
+  //     throw new Error('Error al crear el perro: ' + error.message);
     }
-};
 
 module.exports = createDog;
-

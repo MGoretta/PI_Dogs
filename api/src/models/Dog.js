@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { v4: uuidv4 } = require('uuid');
+
 
 module.exports = (sequelize) => {
   sequelize.define('dog', {
@@ -9,23 +9,35 @@ module.exports = (sequelize) => {
       allowNull: false,
       primaryKey: true,
     },
-    image: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    height: {
-      type: DataTypes.STRING,
+    height_min:{
+      type: DataTypes.FLOAT,
       allowNull: false
     },
-    weight: {
-      type: DataTypes.STRING,
+    height_max:{
+      type: DataTypes.FLOAT,
       allowNull: false
     },
-    life_span: {
+    weight_min:{
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
+    weight_max:{
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },  
+    life_span_min: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
+    life_span_max: {
+      type: DataTypes.FLOAT,
+      allowNull: false
+    },
+    image: {
       type: DataTypes.STRING,
       allowNull: false
     }
