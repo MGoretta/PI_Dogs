@@ -7,6 +7,6 @@ usersRoutes.get("/", getAllDogsHandler),
 
 usersRoutes.get("/:idRaza", getDogByIdHandler),
 
-usersRoutes.get("/name", getDogsByNameHandler),
+usersRoutes.get("/", getDogsByNameHandler),
 
 module.exports = usersRoutes;

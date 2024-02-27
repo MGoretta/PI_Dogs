@@ -3,10 +3,8 @@ const { Temperament } = require('../db');
 
 const getAllTemperaments = async () => {
     try {
-        const response = await axios.get('https://api.thedogapi.com/v1/breeds');
+        const response = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key={API_KEY}`);
         const dogsData = response.data;
-
-        console.log('Datos de los perros recibidos de la API:', dogsData);
         
         // Extraer los temperamentos de los datos de los perros
         const temperaments = dogsData.reduce((acc, dog) => {

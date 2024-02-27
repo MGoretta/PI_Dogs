@@ -1,30 +1,47 @@
 const axios = require('axios');
 const { Dog } = require('../db');
 const { Op } = require('sequelize');
+const { clean } = require ("./getAllDogs")
+const { API_KEY } = process.env;
 
-const getDogByName = async (name) => {
-    try {
-        // Buscar perros por nombre en la base de datos
-        const dogsFromDB = await Dog.findAll({
-            where: {
-                name: {
-                    [Op.iLike]: `%${name}%` // Buscar coincidencias parciales, sin importar mayúsculas o minúsculas
-                }
-            }
-        });
+const getDogsByName = async (name) => {
 
-        // Buscar perros por nombre en la API externa
-        const response = await axios.get(`https://api.thedogapi.com/v1/breeds/search?q=${name}`);
-        const dogsFromAPI = response.data;
+    const infoAPI = (await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`).data);
 
-        // Combinar los resultados de la base de datos y de la API externa
-        const combinedResults = [...dogsFromDB, ...dogsFromAPI];
+ const dogsAPI = clean(infoAPI);
 
-        return combinedResults;
-    } catch (error) {
-        console.error('Error al buscar perros por nombre:', error);
-        throw error;
-    }
+ const dogFiltered = dogsAPI.filter(dog=>dog.name=name);
+
+ const dogBBDD = await Dog.findAll({where: {name: name}});
+
+ return [...dogFiltered, ...dogBBDD];
 };
 
-module.exports = getDogByName;
+// const getDogsByName = async (name) => {
+//     try {
+//         // Buscar perros por nombre en la base de datos
+//         let dogsFromDB = await Dog.findAll({
+//             where: {
+//                 name: {
+//                     [Op.iLike]: `%${name}%` // Buscar coincidencias parciales, sin importar mayúsculas o minúsculas
+//                 }
+//             }
+//         });
+
+//         // Si no se encontraron resultados en la base de datos, buscar en la API externa
+//         if (dogsFromDB.length === 0) {
+//             const response = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key={API_KEY}`);
+//             dogsFromDB = response.data;
+
+//             dogsFromDB = dogsFromAPI.filter((el) => 
+//             el.name.toLowerCase().includes(req.query.name.toLowerCase()))
+//         }
+
+//         return dogsFromDB;
+//     } catch (error) {
+//         console.error('Error al buscar perros por nombre:', error);
+//         throw error;
+//     }
+// };
+
+module.exports = getDogsByName;
