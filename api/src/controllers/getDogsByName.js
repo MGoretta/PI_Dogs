@@ -10,7 +10,7 @@ const getDogsByName = async (name) => {
 
  const dogsAPI = clean(infoAPI);
 
- const dogFiltered = dogsAPI.filter(dog=>dog.name=name);
+ const dogFiltered = dogsAPI.filter(dog => dog.name == name);
 
  const dogBBDD = await Dog.findAll({where: {name: name}});
 

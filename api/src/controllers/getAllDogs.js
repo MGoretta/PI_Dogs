@@ -1,43 +1,43 @@
-const { Dog } = require ("../db")
+const { Dog, Temperament } = require("../db");
 const { API_KEY } = process.env;
 const axios = require('axios');
 
 const clean = (arr) => {
-  return arr.map((dog)=>{
-  return {
-    name: dog.name,
-    image: dog.reference_image_id,
-    height: dog.height,
-    weight: dog.height,
-    life_span: dog.life_span,
-    temperament: dog.temperament,
-    created: false,
-  };
-});
- };
+  if (!arr || !Array.isArray(arr)) {
+    return []; // O manejar el caso en el que arr no está definido o no es un array
+  }
+
+  return arr.map((dog) => {
+    return {
+      name: dog.name,
+      image: dog.reference_image_id,
+      height: dog.height,
+      weight: dog.weight, 
+      life_span: dog.life_span,
+      temperament: dog.Temperaments,
+      created: false,
+    };
+  });
+};
 
 const getAllDogs = async () => {
- const dogsDB = await Dog.findAll();
- const infoAPI = (await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`).data);
+  // Obtener perros de la base de datos con temperamentos asociados
+  const dogsDB = await Dog.findAll({ include: Temperament
+    });
 
- const dogsAPI = clean(infoAPI);
+  // Obtener información de la API
+  const infoAPI = (await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`)).data;
 
- return [...dogsDB, ...dogsAPI];
+  // Limpiar los datos de la API
+  const dogsAPI = clean(infoAPI);
+
+  // Combinar perros de la base de datos y de la API
+  const allDogs = [...dogsDB, ...dogsAPI];
+
+  return allDogs;
 };
-    
-//     // Obtener los datos de los perros de la respuesta
-//     const dogsData = response.data;
-    
-//     // Mapear los datos de los perros para obtener un arreglo de objetos con solo la propiedad 'name'
-//     const dogName = dogsData.map(dog => ({ name: dog.name }));
-    
-//     return dogName;
-//   } catch (error) {
-//     console.error('Error al obtener las razas de los perros:', error);
-//     throw error;
-//   }
-// };
 
 module.exports = {
-   getAllDogs,
-}
+  getAllDogs,
+  clean,
+};

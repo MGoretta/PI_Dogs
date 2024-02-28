@@ -1,12 +1,26 @@
-const {Router} = require ("express");
-const {getAllDogsHandler, getDogByIdHandler, getDogsByNameHandler} = require("../handlers/usersHandlers");
+const { Router } = require("express");
+const { getAllDogsHandler, getDogByIdHandler, getDogsByNameHandler } = require("../handlers/usersHandlers");
 
 const usersRoutes = Router();
 
-usersRoutes.get("/", getAllDogsHandler),
+// Ruta para obtener todos los perros
+usersRoutes.get("/all", getAllDogsHandler);
 
-usersRoutes.get("/:idRaza", getDogByIdHandler),
+// Ruta para obtener un perro por su ID de raza
+usersRoutes.get("/:idRaza", getDogByIdHandler);
 
-usersRoutes.get("/", getDogsByNameHandler),
+// Ruta para buscar perros por nombre
+usersRoutes.get("/search", getDogsByNameHandler);
+
+// const {Router} = require ("express");
+// const {getAllDogsHandler, getDogByIdHandler, getDogsByNameHandler} = require("../handlers/usersHandlers");
+
+// const usersRoutes = Router();
+
+// usersRoutes.get("/", getAllDogsHandler),
+
+// usersRoutes.get("/:idRaza", getDogByIdHandler),
+
+// usersRoutes.get("/", getDogsByNameHandler),
 
 module.exports = usersRoutes;

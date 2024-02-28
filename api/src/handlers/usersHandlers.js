@@ -1,6 +1,6 @@
 const { getAllDogs } = require("../controllers/getAllDogs");
 const {getDogByIdRaza} = require ("../controllers/getDogByIdRaza");
-const getDogByName = require ("../controllers/getDogsByName")
+const getDogsByName = require ("../controllers/getDogsByName")
 
 const getAllDogsHandler = async (req, res) => {
     try {
@@ -32,27 +32,45 @@ const getAllDogsHandler = async (req, res) => {
 const getDogsByNameHandler = async (req, res) => {
   const { name } = req.query;
 
-  // Verificar si se proporcionó un nombre
-  if (!name) {
-      return res.status(400).json({ error: 'Debe proporcionar un nombre de perro.' });
-  }
-
   try {
-    if (name){
-      // Llamar al controlador para buscar perros por nombre
-      const dogs = await getDogByName(name); 
-      // Devolver los perros encontrados
-      res.status(200).json( dogs );
-    } else {
-      const response = await (getAllDogs)
-      res.status(200).json( response );
-   }
-      
-    } catch (error) {
-      console.error('Error al buscar perros por nombre:', error);
-      res.status(500).json({ error: 'Ocurrió un error al procesar la solicitud.' });
+    // Verificar si se proporcionó un nombre
+    if (!name) {
+      return res.status(400).json({ error: 'Debe proporcionar un nombre de perro.' });
+    }
+
+    // Llamar al controlador para buscar perros por nombre
+    const dogs = await getDogsByName(name); 
+    // Devolver los perros encontrados
+    res.status(200).json(dogs);
+  } catch (error) {
+    console.error('Error al buscar perros por nombre:', error);
+    res.status(500).json({ error: 'Ocurrió un error al procesar la solicitud.' });
   }
 };
+// const getDogsByNameHandler = async (req, res) => {
+//   const { name } = req.query;
+
+//   // Verificar si se proporcionó un nombre
+//   if (!name) {
+//       return res.status(400).json({ error: 'Debe proporcionar un nombre de perro.' });
+//   }
+
+//   try {
+//     if (name){
+//       // Llamar al controlador para buscar perros por nombre
+//       const dogs = await getDogsByName(name); 
+//       // Devolver los perros encontrados
+//       res.status(200).json( dogs );
+//     } else {
+//       const response = await getAllDogs();
+//       res.status(200).json( response );
+//    }
+      
+//     } catch (error) {
+//       console.error('Error al buscar perros por nombre:', error);
+//       res.status(500).json({ error: 'Ocurrió un error al procesar la solicitud.' });
+//   }
+// };
  
 module.exports = {
     getAllDogsHandler,
